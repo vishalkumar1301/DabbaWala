@@ -12,14 +12,13 @@ class Database {
     }
 
     _connect() {
-        mongoose.connect(`mongodb://${server}/${dBName}`, { useNewUrlParser: true, useUnifiedTopology: true })
+        mongoose.connect(`${server}`, { useNewUrlParser: true, useUnifiedTopology: true })
                 .then(() => {
-                    logger.info(`Database Connection with ${dBName} successfull`)
+                    logger.info(`Database Connection with ${dBName} successfull | database.js`)
                 })
                 .catch((err) => {
-                    logger.error(`Database connection error ${err}`);
+                    logger.error(`Database connection error ${err} | database.js`);
                 });
-        
     }
 }
 

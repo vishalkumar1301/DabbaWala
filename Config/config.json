@@ -1,0 +1,5 @@
+{
+    "mongoDbURL": "mongodb+srv://dabbawalaapplication:dabbawalaapplication@dabbawala.oembp.mongodb.net/DabbaWala?retryWrites=true&w=majority",
+    "dBName": "DabbaWala",
+    "jwtSecretKey": "TooSecretToShare"
+}
