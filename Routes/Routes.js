@@ -5,10 +5,11 @@ const authenticationRoute = express.Router();
 const User = require('../Models/user');
 const { Constants } = require('../constants');
 const { logger } = require('../Config/winston');
-const { verifyLocalToken } = require('../Authentication/verifyLocalToken');
+const { SignInValidator, SignUpValidator } = require('../Validations/validator');
+
 require('../Authentication/auth')(passport);
 
-authenticationRoute.post('/signup', async (req, res, next) => {
+authenticationRoute.post('/signup', SignUpValidator, async (req, res, next) => {
 
     User.findOne({email: req.body.email}, function (err, user) {
         
@@ -47,7 +48,7 @@ authenticationRoute.post('/signup', async (req, res, next) => {
 
 });
 
-authenticationRoute.post('/signin', passport.authenticate('local', {session: false}), async (req, res, next) => {
+authenticationRoute.post('/signin', SignInValidator, passport.authenticate('local', {session: false}), async (req, res, next) => {
     res.json({
         message: Constants.SuccessMessages.SigninSuccessfull,
         user: req.user
