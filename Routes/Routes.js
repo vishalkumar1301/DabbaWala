@@ -30,14 +30,16 @@ authenticationRoute.post('/signup', SignUpValidationRule, SignUpValidationCheck,
             newUser.lastName = req.body.lastName;
             newUser.phoneNumber = req.body.phoneNumber;
             newUser.userType = req.body.userType;
+            newUser.state = req.body.state;
+            newUser.city = req.body.city;
+            newUser.pincode = req.body.pincode;
+            newUser.address = req.body.address
 
-            console.log(req.body);
             newUser.save(function (err) {
 
                 if(err) {
                     logger.error(err);
-                    console.log(err);
-                    return res.json({message: Constants.ErrorMessages.InternalServerError});
+                    return res.status(500).json({message: Constants.ErrorMessages.InternalServerError});
                 }
                 return res.json({
                     message: Constants.SuccessMessages.SignupSuccessfull,
