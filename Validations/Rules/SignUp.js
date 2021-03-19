@@ -5,7 +5,7 @@ module.exports = {
     SignUpValidationRule: [ 
         body('email').exists().withMessage(Constants.ErrorMessages.ProvideEmailAddress).isEmail().withMessage(Constants.ErrorMessages.ProvideValidEmail),
         body('password').exists().withMessage(Constants.ErrorMessages.ProvidePassword),
-        body('phoneNumber').exists().withMessage(Constants.ErrorMessages.ProvidePhoneNumber).isString().withMessage(Constants.ErrorMessages.ValueShouldBeString).matches("((\\+*)((0[ -]+)*|(91 )*)(\\d{12}+|\\d{10}+))|\\d{5}([- ]*)\\d{6}").withMessage(Constants.ErrorMessages.ProvideValidPhoneNumber),
+        body('phoneNumber').exists().withMessage(Constants.ErrorMessages.ProvidePhoneNumber).isString().withMessage(Constants.ErrorMessages.ValueShouldBeString).isLength({ min: 10, max: 10}).withMessage(Constants.ErrorMessages.PhoneNumberShouldBe10Digit),
         body('firstName').exists().withMessage(Constants.ErrorMessages.ProvideValidFirstName).isString().withMessage(Constants.ErrorMessages.ValueShouldBeString),
         body('lastName').exists().withMessage(Constants.ErrorMessages.ProvideValidLastName).isString().withMessage(Constants.ErrorMessages.ValueShouldBeString),
         body('userType').exists().withMessage(Constants.ErrorMessages.ProvideValidUserType).isInt({ min: 1, max: 2}).withMessage(Constants.ErrorMessages.UserTypeCanOnlyBe123)
