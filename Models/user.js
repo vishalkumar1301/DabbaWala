@@ -47,7 +47,7 @@ let userSchema = new mongoose.Schema({
                 type: String,
                 required: true
             },
-            houseNumber: {
+            address: {
                 type: String,
                 required: true
             }
@@ -80,7 +80,8 @@ userSchema.methods.generateToken = async function (next) {
 
 userSchema.statics.findByToken = async function (token, next) {
     jwt.verify(token, configuration.jwtSecretKey, function (err, decode) {
-        this.findOne({ "_id": decode, "token": token}, function (err, user) {
+        if(err) return next(err);
+        UserModel.findOne({ _id: decode.id, token: token}, function (err, user) {
            if(err) return next(err) ;
            next(null, user);
         });

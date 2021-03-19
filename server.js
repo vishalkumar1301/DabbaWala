@@ -7,6 +7,7 @@ const passport = require('passport');
 const configuration = require('./config');
 const {logger} = require('./Config/winston');
 const authenticationRoutes = require('./Routes/Routes');
+const addressRoute = require('./Routes/Address');
 require('./database');
 
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 app.use('/auth', authenticationRoutes);
+app.use('/address', addressRoute);
 
 // start sever
 app.listen(port, function() {

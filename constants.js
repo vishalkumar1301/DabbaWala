@@ -1,6 +1,7 @@
 class Constants {
     static configPath = './Config/config.json';
     static ErrorMessages = {
+        UserUnAuthorized: 'Un-Authorized Access',
         ValueShouldBeString: 'Value should be string',
         InternalServerError: 'Internal Server Error',
         EmailAlreadyExists: 'Email Already Exists',
@@ -23,7 +24,9 @@ class Constants {
     };
     static SuccessMessages = {
         SignupSuccessfull: 'Signup Successfull',
-        SigninSuccessfull: 'Signin Successfull'
+        SigninSuccessfull: 'Signin Successfull',
+        AddressAddedSuccessfully: 'Address added successfully',
+        AddressAlreadyExists: 'Address already exists'
     };
 }
 

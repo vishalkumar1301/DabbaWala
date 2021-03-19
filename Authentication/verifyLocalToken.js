@@ -1,4 +1,6 @@
 const User = require('../Models/user');
+const { JSONResponse } = require('../Constants/Response');
+const { Constants } = require('../constants');
 
 let verifyLocalToken = (req, res, next) => {
     const bearerHeader = req.headers['authorization'];
@@ -9,17 +11,17 @@ let verifyLocalToken = (req, res, next) => {
         req.token = bearerToken;
     } else {
         // Forbidden
-        next(new Error('Un-Authorized'));
+        return res.status(499).json(new JSONResponse(Constants.ErrorMessages.UserUnAuthorized).getJson());
     }
     
-    User.findByToken(token, (err, user) => {
-        if(err) throw err;
-        if(!user) return res.json({
-            error :true
-        });
-
-        req.token= token;
-        req.user=user;
+    User.findByToken(req.token, (err, user) => {
+        if (err) {
+            return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson())
+        }
+        if(!user) {
+            return res.status(401).json(new JSONResponse(Constants.ErrorMessages.UserUnAuthorized).getJson());
+        }
+        req.user = user;
         next();
     })
 }

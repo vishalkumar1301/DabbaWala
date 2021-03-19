@@ -9,6 +9,7 @@ const { SignUpValidationRule } = require('../Validations/Rules/SignUp');
 const { SignInValidationRule } = require('../Validations/Rules/SignIn');
 const { SignUpValidationCheck } = require('../Validations/Checks/SignUp');
 const { SignInValidationCheck } = require('../Validations/Checks/SignIn');
+const { JSONResponse } = require('../Constants/Response');
 
 require('../Authentication/auth')(passport);
 
@@ -17,10 +18,10 @@ authenticationRoute.post('/signup', SignUpValidationRule, SignUpValidationCheck,
     User.findOne({email: req.body.email}, function (err, user) {
         
         if (err) {
-            logger.error(err);
-            return res.json({message: Constants.ErrorMessages.InternalServerError});
+            console.log(err);
+            return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         }
-        if(user) return res.json({message: Constants.ErrorMessages.EmailAlreadyExists});
+        if(user) return res.json(new JSONResponse(Constants.ErrorMessages.EmailAlreadyExists).getJson());
         else {
 
             var newUser = new User();
@@ -35,11 +36,9 @@ authenticationRoute.post('/signup', SignUpValidationRule, SignUpValidationCheck,
 
                 if(err) {
                     logger.error(err);
-                    return res.status(500).json({message: Constants.ErrorMessages.InternalServerError});
+                    return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
                 }
-                return res.json({
-                    message: Constants.SuccessMessages.SignupSuccessfull,
-                });
+                return res.json(new JSONResponse(null, Constants.SuccessMessages.SignupSuccessfull).getJson());
 
             });
 
