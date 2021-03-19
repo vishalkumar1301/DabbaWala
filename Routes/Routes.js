@@ -30,10 +30,6 @@ authenticationRoute.post('/signup', SignUpValidationRule, SignUpValidationCheck,
             newUser.lastName = req.body.lastName;
             newUser.phoneNumber = req.body.phoneNumber;
             newUser.userType = req.body.userType;
-            newUser.state = req.body.state;
-            newUser.city = req.body.city;
-            newUser.pincode = req.body.pincode;
-            newUser.address = req.body.address
 
             newUser.save(function (err) {
 
