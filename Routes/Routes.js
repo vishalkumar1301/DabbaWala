@@ -21,7 +21,7 @@ authenticationRoute.post('/signup', SignUpValidationRule, SignUpValidationCheck,
             console.log(err);
             return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         }
-        if(user) return res.json(new JSONResponse(Constants.ErrorMessages.EmailAlreadyExists).getJson());
+        if(user) return res.status(409).json(new JSONResponse(null, Constants.ErrorMessages.EmailAlreadyExists).getJson());
         else {
 
             var newUser = new User();

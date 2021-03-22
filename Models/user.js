@@ -50,6 +50,35 @@ let userSchema = new mongoose.Schema({
             address: {
                 type: String,
                 required: true
+            },
+            streetOrBuildingName: {
+                type: String,
+                required: true
+            },
+            landmark: {
+                type: String,
+                required: true
+            },
+            latitude: {
+                type: String,
+                required: true
+            },
+            longitude: {
+                type: String,
+                required: true
+            },
+            mapsAddress: {
+                type: String,
+                required: true
+            },
+            saveAs: {
+                type: String,
+                enum: ['Work', 'Home', 'Other'],
+                required: true
+            },
+            isSelected: {
+                type: Boolean,
+                required: true
             }
         }
     ]

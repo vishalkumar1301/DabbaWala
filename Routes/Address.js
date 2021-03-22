@@ -11,9 +11,10 @@ const { JSONResponse } = require('../Constants/Response');
 addressRoute.use(verifyLocalToken);
 
 addressRoute.post('/', AddressValidationRule, AddressValidationCheck, async (req, res, next) => {
-    var index = req.user.addresses.findIndex(x => x.city === req.body.city && x.state === req.body.state && x.pincode === req.body.pincode && x.address === req.body.address);
+    // general check for all the address fields
+    var index = req.user.addresses.findIndex(x => x.city === req.body.city && x.state === req.body.state && x.pincode === req.body.pincode && x.address === req.body.address && x.landmark === req.body.landmark && x.streetOrBuildingName === req.body.streetOrBuildingName);
     if(index < 0) {
-        User.findOneAndUpdate({ _id: req.user._id }, { $push: { addresses: { city: req.body.city, state: req.body.state, pincode: req.body.pincode, address: req.body.address } } }, function (err, user) {
+        User.findOneAndUpdate({ _id: req.user._id }, { $push: { addresses: { city: req.body.city, state: req.body.state, pincode: req.body.pincode, address: req.body.address, landmark: req.body.landmark, streetOrBuildingName: req.body.streetOrBuildingName, saveAs: req.body.saveAs, latitude: req.body.latitude, longitude: req.body.longitude, mapsAddress: req.body.mapsAddress} } }, function (err, user) {
             if(err) {
                 res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
             };
@@ -25,7 +26,7 @@ addressRoute.post('/', AddressValidationRule, AddressValidationCheck, async (req
 });
 
 addressRoute.get('/', AddressValidationCheck, async (req, res, next) => {
-    res.json({ "addresses": req.user.addresses});
-})
+    res.json(req.user.addresses);
+});
 
 module.exports = addressRoute;

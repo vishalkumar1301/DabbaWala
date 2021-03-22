@@ -3,6 +3,7 @@ class Constants {
     static ErrorMessages = {
         UserUnAuthorized: 'Un-Authorized Access',
         ValueShouldBeString: 'Value should be string',
+        ValueShouldBeBoolean: 'Value should be boolean',
         InternalServerError: 'Internal Server Error',
         EmailAlreadyExists: 'Email Already Exists',
         IncorrectEmail: 'IncorrectEmail',
@@ -20,7 +21,16 @@ class Constants {
         ProvideCity: 'Provide city',
         ProvidePincode: 'Provide pincode',
         ProvideAddresss: 'Provide address',
-        UserTypeCanOnlyBe123: 'User type can only be 1, 2 or 3'
+        UserTypeCanOnlyBe123: 'User type can only be 1, 2 or 3',
+        ProvideLandmark: 'Provide landmark',
+        ProvideSelectedType: 'Provide selected type',
+        ProvideLatitude: 'Provide latitude',
+        ProvideLongitude: 'Provide longitude',
+        ProvideStreetOrBuildingName: 'Provide street or building name',
+        ProvideMapsAddress: 'Provide maps address',
+        ProvideAddressType: 'Provide address type',
+        HomeIsAlreadySelected: 'Home is already selected',
+        WorkIsAlreadySelected: 'Work is already selected'
     };
     static SuccessMessages = {
         SignupSuccessfull: 'Signup Successfull',
@@ -28,6 +38,11 @@ class Constants {
         AddressAddedSuccessfully: 'Address added successfully',
         AddressAlreadyExists: 'Address already exists'
     };
+    static AddressType = {
+        Work: 'Work',
+        Home: 'Home',
+        Other: 'Other'
+    }
 }
 
 module.exports = {
