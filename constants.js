@@ -30,13 +30,17 @@ class Constants {
         ProvideMapsAddress: 'Provide maps address',
         ProvideAddressType: 'Provide address type',
         HomeIsAlreadySelected: 'Home is already selected',
-        WorkIsAlreadySelected: 'Work is already selected'
+        WorkIsAlreadySelected: 'Work is already selected',
+        ProvideAddressId: 'Provide address id',
+        AddressNotFound: 'Address not found',
+        AddressIdShouldBe24CharactersLong: 'Address Id should be 24 charachter long'
     };
     static SuccessMessages = {
         SignupSuccessfull: 'Signup Successfull',
         SigninSuccessfull: 'Signin Successfull',
         AddressAddedSuccessfully: 'Address added successfully',
-        AddressAlreadyExists: 'Address already exists'
+        AddressAlreadyExists: 'Address already exists',
+        ChangedDefaultAddress: 'Changed default address'
     };
     static AddressType = {
         Work: 'Work',
