@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const gridFSStorage = require('multer-gridfs-storage');
+
 const {configuration} = require('./config');
 const {logger} = require('./Config/winston');
 
@@ -23,3 +25,16 @@ class Database {
 }
 
 module.exports = new Database();
+module.exports = {
+    storage: new gridFSStorage({  
+        url: server,  
+        file: (req, file) => {    
+               return {      
+                    bucketName: 'test',       
+                    //Setting collection name, default name is fs      
+                    filename: file.originalname     
+                    //Setting file name to original name of file    
+             }  
+       }
+    })
+}
