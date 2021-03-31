@@ -17,6 +17,9 @@ module.exports = async function (passport) {
                 if(!isMatch) {
                     return done(null, false)
                 }
+                if(user.token) {
+                    return done(null, {token: user.token});
+                }
                 user.generateToken((err, user) => {
                     if(err) return done(err);
                     return done(null, {token: user.token});
