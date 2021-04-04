@@ -111,7 +111,6 @@ userSchema.statics.findByToken = async function (token, next) {
     jwt.verify(token, configuration.jwtSecretKey, function (err, decode) {
         if(err) return next(err);
         UserModel.findOne({ _id: decode.id, token: token}, function (err, user) {
-            console.log(err);
            if(err) return next(err) ;
            next(null, user);
         });

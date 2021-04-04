@@ -18,7 +18,6 @@ authenticationRoute.post('/signup', SignUpValidationRule, SignUpValidationCheck,
     User.findOne({email: req.body.email}, function (err, user) {
         
         if (err) {
-            console.log(err);
             return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         }
         if(user) return res.status(409).json(new JSONResponse(null, Constants.ErrorMessages.EmailAlreadyExists).getJson());
