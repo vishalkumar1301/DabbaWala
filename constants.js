@@ -21,7 +21,7 @@ class Constants {
         ProvideCity: 'Provide city',
         ProvidePincode: 'Provide pincode',
         ProvideAddresss: 'Provide address',
-        UserTypeCanOnlyBe123: 'User type can only be 1, 2 or 3',
+        UserTypeCanOnlyBe012: 'User type can only be 0, 1 or 2',
         ProvideLandmark: 'Provide landmark',
         ProvideSelectedType: 'Provide selected type',
         ProvideLatitude: 'Provide latitude',
@@ -40,7 +40,8 @@ class Constants {
         SigninSuccessfull: 'Signin Successfull',
         AddressAddedSuccessfully: 'Address added successfully',
         AddressAlreadyExists: 'Address already exists',
-        ChangedDefaultAddress: 'Changed default address'
+        ChangedDefaultAddress: 'Changed default address',
+        BreakfastAdded: 'Breakfast Added'
     };
     static AddressType = {
         Work: 'Work',

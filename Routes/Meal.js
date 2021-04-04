@@ -1,28 +1,25 @@
 const express = require('express');
 const multer = require('multer');
-
-const { storage } = require('../database');
+const crypto = require('crypto');
+const path = require('path');
 
 const mealRoute = express.Router();
+const { Constants } = require('../constants')
 
-var fileNameMiddleware = multer.diskStorage({
-    filename: function (req, file, cb) {
+var storage = multer.diskStorage({
+    filename: (req, file, cb) => {
         crypto.randomBytes(16, (err, buf) => {
             if(err) return err;
             const filename = buf.toString('hex') + path.extname(file.originalname);
-            cb(null, filename);
+            return cb(null, filename);
         })
-    }
-});
+   }
+})
+   
+var upload = multer({ storage: storage })
 
-var fileNameMiddleware = multer({ storage: fileNameMiddleware });
-var upload = multer({    
-    storage: storage  
-}).array('photos', 4);
-
-mealRoute.post('/breakfast', fileNameMiddleware.array('photos', 4), upload, function (req, res) {
-    console.log(req.files);
-    res.send(req.body);
+mealRoute.post('/breakfast', upload.array('photos', 4), function (req, res) {
+    res.json(new JSONResponse(null, Constants.SuccessMessages.BreakfastAdded).getJson());
 });
 
 module.exports = mealRoute;
