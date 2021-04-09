@@ -33,7 +33,16 @@ class Constants {
         WorkIsAlreadySelected: 'Work is already selected',
         ProvideAddressId: 'Provide address id',
         AddressNotFound: 'Address not found',
-        AddressIdShouldBe24CharactersLong: 'Address Id should be 24 charachter long'
+        AddressIdShouldBe24CharactersLong: 'Address Id should be 24 charachter long',
+        ProvideMeals: 'Provide meals',
+        ProvideMealName: 'Provide meal name',
+        ProvideMealDescription: 'Provide meal description',
+        ValueShouldBeInteger: 'Value should be integer',
+        ProvideDescription: 'Provide description',
+        ProvidePrice: 'Provide price',
+        ProvideMealType: 'Provide meal type',
+        ValueShouldBeBreakfastLunchOrDinner: 'Value should be Breakfast lunch or dinner',
+        ProvideJSONData: 'Provide json data'
     };
     static SuccessMessages = {
         SignupSuccessfull: 'Signup Successfull',

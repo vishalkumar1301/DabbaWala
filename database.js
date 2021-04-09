@@ -31,14 +31,16 @@ module.exports = {
     storage: new gridFSStorage({  
         url: server,  
         file: (req, file) => {
-            crypto.randomBytes(16, (err, buf) => {
-                if(err) return err;
-                const filename = buf.toString('hex') + path.extname(file.originalname);
-                return {      
+            return new Promise ((resolve, reject) => {
+                crypto.randomBytes(16, (err, buf) => {
+                    if(err) return reject(err);
+                    const filename = buf.toString('hex') + path.extname(file.originalname);
+                    resolve({      
                         bucketName: 'Images',       
                         filename: filename
-                }  
+                    });  
+                })
             })
-       }
+        }
     })
 }
