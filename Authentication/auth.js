@@ -4,7 +4,6 @@ const localStrategy = require('passport-local').Strategy;
 
 // custom modules
 const User = require('../Models/user');
-const { JSONResponse } = require('../Constants/Response');
 const { Constants } = require('../constants');
 
 module.exports = async function (passport) {
