@@ -1,4 +1,4 @@
-const { JSONResponse } = require('../../constants/Response');
+const { JSONResponse } = require('../../Constants/Response');
 const { Constants } = require('../../constants');
 
 var mealValidation = function (req, res, next) {
