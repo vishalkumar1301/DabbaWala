@@ -42,7 +42,8 @@ class Constants {
         ProvidePrice: 'Provide price',
         ProvideMealType: 'Provide meal type',
         ValueShouldBeBreakfastLunchOrDinner: 'Value should be Breakfast lunch or dinner',
-        ProvideJSONData: 'Provide json data'
+        ProvideJSONData: 'Provide json data',
+        InvalidToken: 'Invalid token'
     };
     static SuccessMessages = {
         SignupSuccessfull: 'Signup Successfull',
