@@ -3,6 +3,8 @@ const { JSONResponse } = require('../Constants/Response');
 const { Constants } = require('../constants');
 
 let verifyLocalToken = (req, res, next) => {
+    console.log("verify token");
+    console.log(req.body)
     const bearerHeader = req.headers['authorization'];
 
     if (bearerHeader) {
