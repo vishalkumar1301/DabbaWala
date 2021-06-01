@@ -15,7 +15,6 @@ let verifyLocalToken = (req, res, next) => {
     }
     
     User.findByToken(req.token, (err, user) => {
-        console.log(err);
         if (err) {
             return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InvalidToken).getJson())
         }

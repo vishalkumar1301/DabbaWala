@@ -12,7 +12,7 @@ const Calendar = require('../Models/calendar');
 var upload = multer({ storage: storage })
 
 mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
-    
+    console.log(req.body);
     // validation check
     var error = mealValidation(req, res)
     if(error) {
