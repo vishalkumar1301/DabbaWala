@@ -43,7 +43,8 @@ class Constants {
         ProvideMealType: 'Provide meal type',
         ValueShouldBeBreakfastLunchOrDinner: 'Value should be Breakfast lunch or dinner',
         ProvideJSONData: 'Provide json data',
-        InvalidToken: 'Invalid token'
+        InvalidToken: 'Invalid token',
+        DummyError: 'dummy error'
     };
     static SuccessMessages = {
         SignupSuccessfull: 'Signup Successfull',
