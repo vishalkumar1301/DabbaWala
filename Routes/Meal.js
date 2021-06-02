@@ -28,7 +28,7 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
     });
     Dish.insertMany(dishes, function (err, savedDishes) {
         if(err) {
-            logger.error(err);
+            // logger.error(err);
             return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         }
         let calendar = new Calendar();
@@ -38,7 +38,7 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
         calendar.date = savedDishes[0].date;
         calendar.save(function (err) {
             if(err) {
-                logger.error(err);
+                // logger.error(err);
                 return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
             }
             return res.json(new JSONResponse(null, Constants.SuccessMessages.BreakfastAdded).getJson());
