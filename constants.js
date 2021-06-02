@@ -42,7 +42,7 @@ class Constants {
         ProvidePrice: 'Provide price',
         ProvideMealType: 'Provide meal type',
         ValueShouldBeBreakfastLunchOrDinner: 'Value should be Breakfast lunch or dinner',
-        ProvideJSONData: 'Provide json data',
+        ProvideJSONData: 'Provide stringify json data',
         InvalidToken: 'Invalid token',
         DummyError: 'dummy error'
     };

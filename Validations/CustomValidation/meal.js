@@ -13,11 +13,8 @@ var mealValidation = function (req, res, next) {
     }
 
     try {
-        let dishes = req.body.meal.map(element => {
-            // add each meal into meals array
-            return JSON.parse(element);
-        });
-        req.body.meal = dishes;
+        let meal = JSON.parse(req.body.meal);
+        req.body.meal = meal;
     }
     catch (error) {
         return res.status(422).json(new JSONResponse(Constants.ErrorMessages.ProvideJSONData, null, 'meal', 'body').getJson());
