@@ -21,7 +21,6 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
     let dishes = req.body.meal.map(element => {
         var newDish = new Dish();
         newDish.name = element.name;
-        newDish.price = element.price;
         newDish.description = element.description;
         newDish.date = Date.now();
         newDish.cookId = req.user._id;
