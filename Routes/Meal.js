@@ -26,7 +26,7 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
         }
     });
     
-    meal.cookId = req.user._id;
+    meal.cook = req.user._id;
     meal.images = req.files.map(file => file.filename);
     meal.date = Date.now();;
     meal.price = req.body.price;
@@ -40,5 +40,17 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
         return res.json(new JSONResponse(null, req.body.mealType + ' Added').getJson());
     });
 });
+
+mealRoute.get('/meal', function (req, res) {
+    Meal.find({}).populate({
+        path: 'cook',
+        select: '-password -userType -updatedAt -createdAt -__v -token',
+        match: {
+            "addresses.isSelected": "true"
+        }
+    }).exec(function (err, users) {
+        return res.send(users);
+    })
+})
 
 module.exports = mealRoute;
