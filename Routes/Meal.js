@@ -25,17 +25,19 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
             description: i.description
         }
     });
-    console.log(meal.dishes)
+    
     meal.cookId = req.user._id;
     meal.images = req.files.map(file => file.filename);
     meal.date = Date.now();;
     meal.price = req.body.price;
+    meal.mealType = req.body.mealType;
+console.log(meal)
     meal.save(function (err) {
         if(err) {
             logger.error(err);
             return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         }
-        return res.json(new JSONResponse(null, Constants.SuccessMessages.BreakfastAdded).getJson());
+        return res.json(new JSONResponse(null, req.body.mealType + ' Added').getJson());
     });
 });
 

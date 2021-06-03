@@ -36,6 +36,10 @@ let cookMealSchema = new mongoose.Schema({
     isAvailable: {
         type: Boolean,
         default: true
+    },
+    mealType: {
+        type: String,
+        required: true
     }
 });
 
