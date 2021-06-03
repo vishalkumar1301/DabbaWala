@@ -31,7 +31,7 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
     meal.date = Date.now();;
     meal.price = req.body.price;
     meal.mealType = req.body.mealType;
-console.log(meal)
+
     meal.save(function (err) {
         if(err) {
             logger.error(err);
