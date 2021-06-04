@@ -18,11 +18,11 @@ module.exports = async function (passport) {
                     return done(null, false)
                 }
                 if(user.token) {
-                    return done(null, {token: user.token});
+                    return done(null, {token: user.token, userType: user.userType});
                 }
                 user.generateToken((err, user) => {
                     if(err) return done(err);
-                    return done(null, {token: user.token});
+                    return done(null, {token: user.token, userType: user.userType});
                 });
             });
         });
