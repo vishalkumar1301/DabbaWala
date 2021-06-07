@@ -42,13 +42,16 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
 });
 
 mealRoute.get('/meal', function (req, res) {
-    Meal.find({}).populate({
+    Meal.find({isAvailable: true}).populate({
         path: 'cook',
         select: '-password -userType -updatedAt -createdAt -__v -token',
-        match: {
-            "addresses.isSelected": "true"
+        populate: {
+            path: "addresses",
+            match: {
+                isSelected: true
+            }
         }
-    }).exec(function (err, users) {
+    }).select('-updatedAt -createdAt -__v').exec(function (err, users) {
         return res.send(users);
     })
 })

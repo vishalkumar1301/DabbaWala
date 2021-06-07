@@ -2,6 +2,7 @@
 const dotenv = require('dotenv');
 const express = require('express');
 const passport = require('passport');
+const mongoose = require('mongoose');
 
 // import custom modules
 const configuration = require('./config');
@@ -28,7 +29,64 @@ app.use(verifyLocalToken);
 app.use('/', mealRoute);
 app.use('/address', addressRoute);
 
+app.use('/image', function (req, res) {
+    const db = mongoose.connection;
+    
+    const collection = db.collection('Images.files');    
+    const collectionChunks = db.collection('Images.chunks');
+
+    collection.find({filename: req.query.url}).toArray(function(err, docs){   
+        console.log(docs);     
+        if(err){        
+          return res.render('index', {
+           title: 'File error', 
+           message: 'Error finding file', 
+            error: err.errMsg});      
+        }
+      if(!docs || docs.length === 0){        
+        return res.render('index', {
+         title: 'Download Error', 
+         message: 'No file found'});      
+       }else{
+      
+       //Retrieving the chunks from the db          
+       collectionChunks.find({files_id : docs[0]._id})
+         .sort({n: 1}).toArray(function(err, chunks){   
+             console.log(chunks);
+           if(err){            
+              return res.render('index', {
+               title: 'Download Error', 
+               message: 'Error retrieving chunks', 
+               error: err.errmsg});          
+            }
+          if(!chunks || chunks.length === 0){            
+            //No data found            
+            return res.render('index', {
+               title: 'Download Error', 
+               message: 'No data found'});          
+          }
+        
+        let fileData = [];          
+        for(let i=0; i<chunks.length;i++){            
+          //This is in Binary JSON or BSON format, which is stored               
+          //in fileData array in base64 endocoded string format               
+         
+          fileData.push(chunks[i].data.toString('base64'));          
+        }
+        
+         //Display the chunks using the data URI format          
+         let finalFile = 'data:' + docs[0].contentType + ';base64,' 
+              + fileData.join('');    
+          res.send(finalFile);
+         });      
+        }          
+       });  
+
+}); 
+
 // start sever
 app.listen(port, function() {
     logger.info(`App running on port ${port}`)
 });
+
+
