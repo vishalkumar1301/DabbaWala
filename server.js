@@ -73,11 +73,14 @@ app.use('/image', function (req, res) {
          
           fileData.push(chunks[i].data.toString('base64'));          
         }
-        
          //Display the chunks using the data URI format          
-         let finalFile = 'data:' + docs[0].contentType + ';base64,' 
-              + fileData.join('');    
-          res.send(finalFile);
+         var img = Buffer.from(fileData.join(''), 'base64');
+
+         res.writeHead(200, {
+            'Content-Type': 'image/png',
+            'Content-Length': img.length
+        });
+        res.end(img); 
          });      
         }          
        });  
