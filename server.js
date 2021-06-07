@@ -35,7 +35,7 @@ app.use('/image', function (req, res) {
     const collection = db.collection('Images.files');    
     const collectionChunks = db.collection('Images.chunks');
 
-    collection.find({filename: req.query.url}).toArray(function(err, docs){   
+    collection.find({filename: req.query.name}).toArray(function(err, docs){   
         console.log(docs);     
         if(err){        
           return res.render('index', {
