@@ -36,7 +36,6 @@ app.use('/image', function (req, res) {
     const collectionChunks = db.collection('Images.chunks');
 
     collection.find({filename: req.query.name}).toArray(function(err, docs){   
-        console.log(docs);     
         if(err){        
           return res.render('index', {
            title: 'File error', 
@@ -52,7 +51,6 @@ app.use('/image', function (req, res) {
        //Retrieving the chunks from the db          
        collectionChunks.find({files_id : docs[0]._id})
          .sort({n: 1}).toArray(function(err, chunks){   
-             console.log(chunks);
            if(err){            
               return res.render('index', {
                title: 'Download Error', 

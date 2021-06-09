@@ -71,20 +71,13 @@ mealRoute.get('/meal', function (req, res) {
         {
             $project: {
                 _id: 0,
-                isAvailable: 0, 
-                cookId: 0,
-                date: 0,
-                updatedAt: 0,
-                createdAt: 0,
-                __v: 0,
-                "cook._id": 0,
-                "cook.email": 0,
-                "cook.password": 0,
-                "cook.token": 0,
-                "cook.phoneNumber": 0,
-                "cook.__v": 0,
-                "cook.updatedAt": 0,
-                "cook.createdAt": 0,
+                dishes: 1,
+                price: 1,
+                mealType: 1,
+                images: 1,
+                cookFirstName: "$cook.firstName",
+                cookLastName: "$cook.lastName",
+                cookAddress: "$cook.addresses",
             }
         }
     ]).exec(function (err, result) {
