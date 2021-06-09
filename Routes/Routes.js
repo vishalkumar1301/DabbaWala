@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const authenticationRoute = express.Router();
+const mongoose = require('mongoose');
 
 const User = require('../Models/user');
 const { Constants } = require('../constants');
@@ -30,11 +31,11 @@ authenticationRoute.post('/signup', SignUpValidationRule, SignUpValidationCheck,
             newUser.lastName = req.body.lastName;
             newUser.phoneNumber = req.body.phoneNumber;
             newUser.userType = req.body.userType;
-
             newUser.save(function (err) {
 
                 if(err) {
                     logger.error(err);
+
                     return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
                 }
                 return res.json(new JSONResponse(null, Constants.SuccessMessages.SignupSuccessfull).getJson());

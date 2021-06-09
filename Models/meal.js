@@ -15,7 +15,7 @@ let cookMealSchema = new mongoose.Schema({
             }
         }
     ],
-    cook: {
+    cookId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true

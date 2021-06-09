@@ -8,6 +8,7 @@ const { storage } = require('../database');
 const { mealValidation } = require('../Validations/CustomValidation/meal');
 const Meal = require('../Models/meal');
 const {logger} = require('../Config/winston');
+const User = require('../Models/user');
 
 var upload = multer({ storage: storage })
 
@@ -26,12 +27,12 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
         }
     });
     
-    meal.cook = req.user._id;
+    meal.cookId = req.user._id;
     meal.images = req.files.map(file => file.filename);
     meal.date = Date.now();;
     meal.price = req.body.price;
     meal.mealType = req.body.mealType;
-
+    console.log(meal);
     meal.save(function (err) {
         if(err) {
             logger.error(err);
@@ -42,17 +43,52 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
 });
 
 mealRoute.get('/meal', function (req, res) {
-    Meal.find({isAvailable: true}).populate({
-        path: 'cook',
-        select: '-password -userType -updatedAt -createdAt -__v -token',
-        populate: {
-            path: "addresses",
-            match: {
-                isSelected: true
+    Meal.aggregate([
+        {
+            $lookup: {
+                from: "users",
+                localField: "cookId",
+                foreignField: "_id",
+                as: "cook"
+            }
+        }, 
+        {
+            $match: {
+                isAvailable: true
+            }
+        },
+        {
+            $unwind: "$cook"
+        },
+        {
+            $unwind: "$cook.addresses"
+        }, 
+        {
+            $match: {
+                "cook.addresses.isSelected": true
+            }
+        }, 
+        {
+            $project: {
+                _id: 0,
+                isAvailable: 0, 
+                cookId: 0,
+                date: 0,
+                updatedAt: 0,
+                createdAt: 0,
+                __v: 0,
+                "cook._id": 0,
+                "cook.email": 0,
+                "cook.password": 0,
+                "cook.token": 0,
+                "cook.phoneNumber": 0,
+                "cook.__v": 0,
+                "cook.updatedAt": 0,
+                "cook.createdAt": 0,
             }
         }
-    }).select('-updatedAt -createdAt -__v').exec(function (err, users) {
-        return res.send(users);
+    ]).exec(function (err, result) {
+        res.send(result);
     })
 })
 
