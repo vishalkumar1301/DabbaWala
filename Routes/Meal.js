@@ -43,6 +43,7 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
 });
 
 mealRoute.get('/meal', function (req, res) {
+    console.log(req);
     let dishName = req.query.dishName;
     Meal.aggregate([
         {
