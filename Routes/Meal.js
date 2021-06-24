@@ -48,11 +48,11 @@ mealRoute.get('/meal', function (req, res) {
         {
             $unwind: "$dishes"
         },
-        {
-            $match: {
-                "dishes.name": { $regex: dishName, $options: "i" }
-            }
-        },
+        // {
+        //     $match: {
+        //         "dishes.name": { $regex: dishName, $options: "i" }
+        //     }
+        // },
         {
             $lookup: {
                 from: "users",
