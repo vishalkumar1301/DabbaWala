@@ -43,7 +43,16 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
 });
 
 mealRoute.get('/meal', function (req, res) {
+    let dishName = req.query.dishName;
     Meal.aggregate([
+        {
+            $unwind: "$dishes"
+        },
+        {
+            $match: {
+                "dishes.name": { $regex: dishName, $options: "i" }
+            }
+        },
         {
             $lookup: {
                 from: "users",
