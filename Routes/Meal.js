@@ -32,10 +32,12 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
     meal.date = Date.now();;
     meal.price = req.body.price;
     meal.mealType = req.body.mealType;
-    console.log(meal);
+    meal.dishNames += meal.dishes.map(dish => {
+        return dish.name + dish.description;
+    });
+
     meal.save(function (err) {
         if(err) {
-            logger.error(err);
             return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         }
         return res.json(new JSONResponse(null, req.body.mealType + ' Added').getJson());
@@ -46,24 +48,17 @@ mealRoute.get('/meal', function (req, res) {
     let dishName = req.query.dishName;
     Meal.aggregate([
         {
-            $unwind: "$dishes"
+            $match: {
+                "dishNames": { $regex: dishName, $options: "i" },
+                isAvailable: true
+            }
         },
-        // {
-        //     $match: {
-        //         "dishes.name": { $regex: dishName, $options: "i" }
-        //     }
-        // },
         {
             $lookup: {
                 from: "users",
                 localField: "cookId",
                 foreignField: "_id",
                 as: "cook"
-            }
-        }, 
-        {
-            $match: {
-                isAvailable: true
             }
         },
         {
