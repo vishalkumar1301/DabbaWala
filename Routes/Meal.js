@@ -92,6 +92,7 @@ mealRoute.get('/meal', function (req, res) {
 })
 
 function buildPredicate (dishName) {
+    if(dishName == undefined || dishName == '') return {};
     return {
         $or: [
             {
