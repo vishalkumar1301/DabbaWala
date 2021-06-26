@@ -8,7 +8,6 @@ const { storage } = require('../database');
 const { mealValidation } = require('../Validations/CustomValidation/meal');
 const Meal = require('../Models/meal');
 const {logger} = require('../Config/winston');
-const User = require('../Models/user');
 
 var upload = multer({ storage: storage })
 
@@ -33,7 +32,7 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
     meal.price = req.body.price;
     meal.mealType = req.body.mealType;
     meal.dishNames += meal.dishes.map(dish => {
-        return dish.name;
+        return dish.name + dish.description;
     })
     meal.save(function (err) {
         if(err) {
@@ -46,10 +45,10 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
 
 mealRoute.get('/meal', function (req, res) {
     let dishName = req.query.dishName;
+
+    var predicate = buildPredicate(dishName)
+
     Meal.aggregate([
-        {
-            $match: buildPredicate(dishName)
-        },
         {
             $lookup: {
                 from: "users",
@@ -70,6 +69,9 @@ mealRoute.get('/meal', function (req, res) {
             }
         }, 
         {
+            $match: predicate
+        },
+        {
             $project: {
                 _id: 0,
                 dishes: 1,
@@ -82,16 +84,30 @@ mealRoute.get('/meal', function (req, res) {
             }
         }
     ]).exec(function (err, result) {
+        if(err) {
+            logger.error(err);
+        }
         res.send(result);
     })
 })
 
 function buildPredicate (dishName) {
-       var obj = {};
-       if(dishName) {
-           obj = {... obj, "dishNames": { $regex: dishName, $options: "i" }};
-       }
-       return obj;
+    return {
+        $or: [
+            {
+                "dishNames": { $regex: dishName, $options: "i" }
+            },
+            {
+                "cook.firstName": { $regex: dishName, $options: "i" }
+            },
+            {
+                "cook.lastName": { $regex: dishName, $options: "i" }
+            },
+            {
+                "mealType": { $regex: dishName, $options: "i" }
+            }
+        ]
+    };
 }
 
 module.exports = mealRoute;
