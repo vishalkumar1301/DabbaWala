@@ -33,11 +33,11 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
     meal.price = req.body.price;
     meal.mealType = req.body.mealType;
     meal.dishNames += meal.dishes.map(dish => {
-        return dish.name + dish.description;
-    });
-
+        return dish.name;
+    })
     meal.save(function (err) {
         if(err) {
+            console.log(err);
             return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         }
         return res.json(new JSONResponse(null, req.body.mealType + ' Added').getJson());
@@ -48,10 +48,7 @@ mealRoute.get('/meal', function (req, res) {
     let dishName = req.query.dishName;
     Meal.aggregate([
         {
-            $match: {
-                "dishNames": { $regex: dishName, $options: "i" },
-                isAvailable: true
-            }
+            $match: buildPredicate(dishName)
         },
         {
             $lookup: {
@@ -88,5 +85,13 @@ mealRoute.get('/meal', function (req, res) {
         res.send(result);
     })
 })
+
+function buildPredicate (dishName) {
+       var obj = {};
+       if(dishName) {
+           obj = {... obj, "dishNames": { $regex: dishName, $options: "i" }};
+       }
+       return obj;
+}
 
 module.exports = mealRoute;
