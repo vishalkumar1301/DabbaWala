@@ -20,12 +20,7 @@ module.exports = async function (passport) {
                 if(user.token) {
                     return done(null, {
                         token: user.token,
-                        email: user.email,
                         userType: user.userType, 
-                        firstName: user.firstName, 
-                        lastName: user.lastName, 
-                        phoneNumber: user.phoneNumber, 
-                        address: user.addresses.find(i => i.isSelected == true)
                     });
                 }
                 user.generateToken((err, user) => {
