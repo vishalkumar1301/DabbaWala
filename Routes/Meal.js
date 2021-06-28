@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const mongoose = require('mongoose');
 
 const mealRoute = express.Router();
 const { Constants } = require('../constants')
@@ -7,11 +8,12 @@ const { JSONResponse } = require('../Constants/Response');
 const { storage } = require('../database');
 const { mealValidation } = require('../Validations/CustomValidation/meal');
 const Meal = require('../Models/meal');
+const Order = require('../Models/Order');
 const {logger} = require('../Config/winston');
 
 var upload = multer({ storage: storage })
 
-mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
+mealRoute.post('/', upload.array('photos', 4), function (req, res) {
     // validation check
     var error = mealValidation(req, res)
     if(error) {
@@ -36,17 +38,16 @@ mealRoute.post('/meal', upload.array('photos', 4), function (req, res) {
     })
     meal.save(function (err) {
         if(err) {
-            console.log(err);
             return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         }
         return res.json(new JSONResponse(null, req.body.mealType + ' Added').getJson());
     });
 });
 
-mealRoute.get('/meal', function (req, res) {
-    let dishName = req.query.dishName;
+mealRoute.get('/', function (req, res) {
+    let search = req.query.search;
 
-    var predicate = buildPredicate(dishName)
+    var predicate = buildPredicate(search)
 
     Meal.aggregate([
         {
@@ -73,7 +74,7 @@ mealRoute.get('/meal', function (req, res) {
         },
         {
             $project: {
-                _id: 0,
+                _id: 1,
                 dishes: 1,
                 price: 1,
                 mealType: 1,
@@ -90,6 +91,91 @@ mealRoute.get('/meal', function (req, res) {
         res.send(result);
     })
 })
+
+mealRoute.post('/order', function (req, res) {
+    let userId = req.user._id;
+
+    let order = new Order();
+    order.mealDetails = req.body.mealDetails.map(i => {
+        return {
+            mealId: mongoose.Types.ObjectId(i.mealId),
+            quantity: i.quantity
+        }
+    });
+    order.userId = userId;
+    order.orderTime = Date.now();
+    order.save(function(err, result) {
+        if(err) {
+            logger.error(err);
+        }
+        res.json(new JSONResponse(null, Constants.SuccessMessages.OrderPlacedSuccessfully).getJson());
+    });
+});
+
+mealRoute.get('/order', function (req, res) {
+    let userId = req.user._id;
+    Order.aggregate([
+        {
+            $lookup: {
+                from: "meals",
+                localField: "mealDetails.mealId",
+                foreignField: "_id",
+                as: "order"
+            }
+        }
+    ]).exec(function (err, result) {
+        if(err) {
+            logger.error(err);
+        }
+        res.send(result);
+    });
+});
+
+mealRoute.get('/:id', function (req, res) {
+    Meal.aggregate([
+        {
+            $match: {
+                "_id": mongoose.Types.ObjectId(req.params.id)
+            }
+        },
+        {
+            $lookup: {
+                from: 'users',
+                foreignField: '_id',
+                localField: 'cookId',
+                as: 'cook'
+            }
+        }
+    ]).exec(function (err, result) {
+        if(err) {
+            logger.error(err);
+        }
+        res.send(result);
+    });
+});
+
+mealRoute.get('/order/:id', function (req, res) {
+    Order.aggregate([
+        {
+            $match: {
+                _id: mongoose.Types.ObjectId(req.params.id)
+            }
+        },
+        {
+            $lookup: {
+                from: 'meals',
+                foreignField: '_id',
+                localField: 'mealDetails.mealId',
+                as: 'meals'
+            }
+        }
+    ]).exec(function (err, result) {
+        if(err) {
+            logger.error(err);
+        }
+        res.send(result);
+    })
+});
 
 function buildPredicate (dishName) {
     if(dishName == undefined || dishName == '') return {};

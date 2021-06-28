@@ -2,6 +2,7 @@ const { JSONResponse } = require('../../Constants/Response');
 const { Constants } = require('../../constants');
 
 var mealValidation = function (req, res, next) {
+    console.log(req.body);
     if(!req.body.meal) {
         // error
         return res.status(422).json(new JSONResponse(Constants.ErrorMessages.ProvideMeals, null, 'meal', 'body').getJson());

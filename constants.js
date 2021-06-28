@@ -52,7 +52,8 @@ class Constants {
         AddressAddedSuccessfully: 'Address added successfully',
         AddressAlreadyExists: 'Address already exists',
         ChangedDefaultAddress: 'Changed default address',
-        BreakfastAdded: 'Breakfast Added'
+        BreakfastAdded: 'Breakfast Added',
+        OrderPlacedSuccessfully: 'Order Placed Successfully'
     };
     static AddressType = {
         Work: 'Work',

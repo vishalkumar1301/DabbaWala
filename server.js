@@ -11,6 +11,7 @@ const { verifyLocalToken } = require('./Authentication/verifyLocalToken');
 const authenticationRoutes = require('./Routes/Routes');
 const addressRoute = require('./Routes/Address');
 const mealRoute = require('./Routes/Meal');
+const userRoute = require('./Routes/User');
 require('./database');
 
 dotenv.config();
@@ -26,7 +27,9 @@ app.use(passport.initialize());
 app.use('/auth', authenticationRoutes);
 
 app.use(verifyLocalToken);
-app.use('/', mealRoute);
+
+app.use('/meal', mealRoute);
+app.use('/user', userRoute);
 app.use('/address', addressRoute);
 
 app.use('/image', function (req, res) {
@@ -35,7 +38,7 @@ app.use('/image', function (req, res) {
     const collection = db.collection('Images.files');    
     const collectionChunks = db.collection('Images.chunks');
 
-    collection.find({filename: req.query.name}).toArray(function(err, docs){   
+    collection.find({filename: req.query.name}).toArray(function(err, docs){
         if(err){        
           return res.render('index', {
            title: 'File error', 
