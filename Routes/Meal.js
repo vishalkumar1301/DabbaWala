@@ -79,6 +79,7 @@ mealRoute.get('/', function (req, res) {
                 price: 1,
                 mealType: 1,
                 images: 1,
+                cookId: "$cook._id",
                 cookFirstName: "$cook.firstName",
                 cookLastName: "$cook.lastName",
                 cookAddress: "$cook.addresses",
@@ -103,6 +104,9 @@ mealRoute.post('/order', function (req, res) {
         }
     });
     order.userId = userId;
+    order.foodPrice = req.body.foodPrice;
+    order.deliveryPrice = req.body.deliveryPrice;
+    order.taxPrice = req.body.taxPrice;
     order.orderTime = Date.now();
     order.save(function(err, result) {
         if(err) {

@@ -51,6 +51,18 @@ let orderSchema = new mongoose.Schema({
     deliveryPersonAssignTime: {
         required: false,
         type: Date
+    },
+    foodPrice: {
+        required: true,
+        type: Number
+    },
+    deliveryPrice: {
+        required: true,
+        type: Number
+    },
+    taxPrice: {
+        required: true,
+        type: Number
     }
 }); 
 
