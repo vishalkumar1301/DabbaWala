@@ -46,7 +46,8 @@ mealRoute.post('/', upload.array('photos', 4), function (req, res) {
 
 mealRoute.get('/', function (req, res) {
     let search = req.query.search;
-
+    let pageSize = parseInt(req.query.pageSize);
+    let pageNumber = parseInt(req.query.pageNumber);
     var predicate = buildPredicate(search)
 
     Meal.aggregate([
@@ -84,6 +85,12 @@ mealRoute.get('/', function (req, res) {
                 cookLastName: "$cook.lastName",
                 cookAddress: "$cook.addresses",
             }
+        },
+        {
+            $skip: pageSize * (pageNumber - 1)
+        },
+        {
+            $limit: pageSize
         }
     ]).exec(function (err, result) {
         if(err) {

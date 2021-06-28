@@ -59,7 +59,7 @@ class Constants {
         Work: 'Work',
         Home: 'Home',
         Other: 'Other'
-    }
+    };
 }
 
 module.exports = {
