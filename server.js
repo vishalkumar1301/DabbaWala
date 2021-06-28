@@ -25,13 +25,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 app.use('/auth', authenticationRoutes);
-
-app.use(verifyLocalToken);
-
-app.use('/meal', mealRoute);
-app.use('/user', userRoute);
-app.use('/address', addressRoute);
-
 app.use('/image', function (req, res) {
     const db = mongoose.connection;
     
@@ -87,6 +80,13 @@ app.use('/image', function (req, res) {
        });  
 
 }); 
+
+app.use(verifyLocalToken);
+
+app.use('/meal', mealRoute);
+app.use('/user', userRoute);
+app.use('/address', addressRoute);
+
 
 // start sever
 app.listen(port, function() {
