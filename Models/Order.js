@@ -16,10 +16,24 @@ let orderSchema = new mongoose.Schema({
             }
         }
     ],
-    userId: {
+    cookId: {
         required: true,
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    },
+    customerId: {
+        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    isOrderConfirmedByCook: {
+        required: true,
+        default: false,
+        type: Boolean
+    },
+    orderConfirmedByCookTime: {
+        required: false,
+        type: Date
     },
     isDelivered: {
         required: true,
@@ -29,6 +43,11 @@ let orderSchema = new mongoose.Schema({
     deliveryTime: {
         required: false,
         type: Date
+    },
+    isPickedUp: {
+        required: true,
+        type: mongoose.Schema.Types.Boolean,
+        default: false,
     },
     pickupTime: {
         required: false,
@@ -61,6 +80,10 @@ let orderSchema = new mongoose.Schema({
         type: Number
     },
     taxPrice: {
+        required: true,
+        type: Number
+    },
+    totalPrice: {
         required: true,
         type: Number
     }

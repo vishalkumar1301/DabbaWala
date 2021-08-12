@@ -46,8 +46,10 @@ mealRoute.post('/', upload.array('photos', 4), function (req, res) {
 
 mealRoute.get('/', function (req, res) {
     let search = req.query.search;
-    let pageSize = parseInt(req.query.pageSize);
-    let pageNumber = parseInt(req.query.pageNumber);
+    let take = parseInt(req.query.take);
+    console.log(take);
+    let skip = parseInt(req.query.skip);
+    console.log(skip);
     var predicate = buildPredicate(search)
 
     Meal.aggregate([
@@ -87,10 +89,10 @@ mealRoute.get('/', function (req, res) {
             }
         },
         {
-            $skip: pageSize * (pageNumber - 1)
+            $skip: take * (skip - 1)
         },
         {
-            $limit: pageSize
+            $limit: take
         }
     ]).exec(function (err, result) {
         if(err) {
@@ -110,16 +112,20 @@ mealRoute.post('/order', function (req, res) {
             quantity: i.quantity
         }
     });
-    order.userId = userId;
+    order.customerId = userId;
+    order.cookId = req.body.cookId;
     order.foodPrice = req.body.foodPrice;
     order.deliveryPrice = req.body.deliveryPrice;
     order.taxPrice = req.body.taxPrice;
+    order.totalPrice = order.foodPrice + order.deliveryPrice + order.taxPrice;
+    console.log(order.totalPrice + 1);
     order.orderTime = Date.now();
     order.save(function(err, result) {
         if(err) {
             logger.error(err);
+            return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         }
-        res.json(new JSONResponse(null, Constants.SuccessMessages.OrderPlacedSuccessfully).getJson());
+        return res.json(new JSONResponse(null, Constants.SuccessMessages.OrderPlacedSuccessfully).getJson());
     });
 });
 
