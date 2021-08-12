@@ -89,7 +89,7 @@ mealRoute.get('/', function (req, res) {
             }
         },
         {
-            $skip: take * (skip - 1)
+            $skip: skip
         },
         {
             $limit: take
