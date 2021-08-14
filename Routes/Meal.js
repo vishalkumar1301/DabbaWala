@@ -130,7 +130,6 @@ mealRoute.post('/order', function (req, res) {
 });
 
 mealRoute.get('/order', function (req, res) {
-    let userId = req.user._id;
     Order.aggregate([
         {
             $lookup: {
@@ -143,6 +142,43 @@ mealRoute.get('/order', function (req, res) {
     ]).exec(function (err, result) {
         if(err) {
             logger.error(err);
+            return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
+        }
+        res.send(result);
+    });
+});
+
+// gets the orders already booked by the current cook
+mealRoute.get('/order/cook/booked', function (req, res) {
+    Order.aggregate([
+        {
+            $match: {
+                cookId: mongoose.Types.ObjectId(req.user._id),
+                isOrderConfirmedByCook: true,
+            }
+        }
+    ]).exec(function (err, result) {
+        if(err) {
+            logger.error(err);
+            return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
+        }
+        res.send(result);
+    });
+})
+
+// gets the orders, pending for approval by cook.
+mealRoute.get('/order/cook/pending', function(req, res) {
+    Order.aggregate([
+        {
+            $match: {
+                cookId: mongoose.Types.ObjectId(req.user._id),
+                isOrderConfirmedByCook: false
+            }
+        }
+    ]).exec(function (err, result) {
+        if(err) {
+            logger.error(err);
+            return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         }
         res.send(result);
     });
@@ -171,28 +207,29 @@ mealRoute.get('/:id', function (req, res) {
     });
 });
 
-mealRoute.get('/order/:id', function (req, res) {
-    Order.aggregate([
-        {
-            $match: {
-                _id: mongoose.Types.ObjectId(req.params.id)
-            }
-        },
-        {
-            $lookup: {
-                from: 'meals',
-                foreignField: '_id',
-                localField: 'mealDetails.mealId',
-                as: 'meals'
-            }
-        }
-    ]).exec(function (err, result) {
-        if(err) {
-            logger.error(err);
-        }
-        res.send(result);
-    })
-});
+// mealRoute.get('/order/:id', function (req, res) {
+//     Order.aggregate([
+//         {
+//             $match: {
+//                 _id: mongoose.Types.ObjectId(req.params.id)
+//             }
+//         },
+//         {
+//             $lookup: {
+//                 from: 'meals',
+//                 foreignField: '_id',
+//                 localField: 'mealDetails.mealId',
+//                 as: 'meals'
+//             }
+//         }
+//     ]).exec(function (err, result) {
+//         if(err) {
+//             logger.error(err);
+//             return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
+//         }
+//         res.send(result);
+//     })
+// });
 
 function buildPredicate (dishName) {
     if(dishName == undefined || dishName == '') return {};
