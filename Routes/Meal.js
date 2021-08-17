@@ -47,9 +47,7 @@ mealRoute.post('/', upload.array('photos', 4), function (req, res) {
 mealRoute.get('/', function (req, res) {
     let search = req.query.search;
     let take = parseInt(req.query.take);
-    console.log(take);
     let skip = parseInt(req.query.skip);
-    console.log(skip);
     var predicate = buildPredicate(search)
 
     Meal.aggregate([
@@ -118,17 +116,27 @@ mealRoute.post('/order', function (req, res) {
     order.deliveryPrice = req.body.deliveryPrice;
     order.taxPrice = req.body.taxPrice;
     order.totalPrice = order.foodPrice + order.deliveryPrice + order.taxPrice;
-    console.log(order.totalPrice + 1);
     order.orderTime = Date.now();
+    order.customerAddress.state = req.body.customerAddress.state;
+    order.customerAddress.city = req.body.customerAddress.city;
+    order.customerAddress.pincode = req.body.customerAddress.pincode;
+    order.customerAddress.address = req.body.customerAddress.address;
+    order.customerAddress.streetOrBuildingName = req.body.customerAddress.streetOrBuildingName;
+    order.customerAddress.landmark = req.body.customerAddress.landmark;
+    order.customerAddress.latitude = req.body.customerAddress.latitude;
+    order.customerAddress.longitude = req.body.customerAddress.longitude;
+    order.customerAddress.mapsAddress = req.body.customerAddress.mapsAddress;
     order.save(function(err, result) {
         if(err) {
             logger.error(err);
+            console.log(err)
             return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         }
         return res.json(new JSONResponse(null, Constants.SuccessMessages.OrderPlacedSuccessfully).getJson());
     });
 });
 
+// all the orders
 mealRoute.get('/order', function (req, res) {
     Order.aggregate([
         {
@@ -156,13 +164,48 @@ mealRoute.get('/order/cook/booked', function (req, res) {
                 cookId: mongoose.Types.ObjectId(req.user._id),
                 isOrderConfirmedByCook: true,
             }
+        },
+        {
+            $lookup: {
+                from: "meals",
+                localField: "mealDetails.mealId",
+                foreignField: "_id",
+                as: "order"
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "customerId",
+                foreignField: "_id",
+                as: "customerDetails"
+            }
+        },
+        {
+            $unwind: "$customerDetails"
+        },
+        {
+            $project: {
+                customerFirstName: "$customerDetails.firstName",
+                customerLastName: "$customerDetails.lastName",
+                customerId: "$customerDetails._id",
+                cookId: 1,
+                foodPrice: 1,
+                deliveryPrice: 1,
+                taxPrice: 1,
+                totalPrice: 1,
+                orderTime: 1,
+                mealDetails: 1,
+                order: 1,
+                orderId: "$_id"
+            }
         }
     ]).exec(function (err, result) {
         if(err) {
             logger.error(err);
             return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         }
-        res.send(result);
+        res.send(RefactorOrderList(result));
     });
 })
 
@@ -174,13 +217,48 @@ mealRoute.get('/order/cook/pending', function(req, res) {
                 cookId: mongoose.Types.ObjectId(req.user._id),
                 isOrderConfirmedByCook: false
             }
+        },
+        {
+            $lookup: {
+                from: "meals",
+                localField: "mealDetails.mealId",
+                foreignField: "_id",
+                as: "order"
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "customerId",
+                foreignField: "_id",
+                as: "customerDetails"
+            }
+        },
+        {
+            $unwind: "$customerDetails"
+        },
+        {
+            $project: {
+                customerFirstName: "$customerDetails.firstName",
+                customerLastName: "$customerDetails.lastName",
+                customerId: "$customerDetails._id",
+                cookId: 1,
+                foodPrice: 1,
+                deliveryPrice: 1,
+                taxPrice: 1,
+                totalPrice: 1,
+                orderTime: 1,
+                mealDetails: 1,
+                order: 1,
+                orderId: "$_id"
+            }
         }
     ]).exec(function (err, result) {
         if(err) {
             logger.error(err);
             return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         }
-        res.send(result);
+        res.send(RefactorOrderList(result));
     });
 });
 
@@ -249,6 +327,33 @@ function buildPredicate (dishName) {
             }
         ]
     };
+}
+
+function RefactorOrderList(result) {
+    return result.map(i => {
+        let index = 0;
+        return {
+            order: i.order.map(j => {
+                return {
+                    dishes: j.dishes,
+                    images: j.images,
+                    mealType: j.mealType,
+                    price: j.price,
+                    quantity: i.mealDetails[index++].quantity
+                }
+            }),
+            cookId: i.cookId,
+            foodPrice: i.foodPrice,
+            deliveryPrice: i.deliveryPrice,
+            taxPrice: i.taxPrice,
+            totalPrice: i.totalPrice,
+            orderTime: i.orderTime,
+            customerFirstName: i.customerFirstName,
+            customerLastName: i.customerLastName,   
+            customerId: i.customerId,
+            orderId: i.orderId,
+        }
+    });
 }
 
 module.exports = mealRoute;

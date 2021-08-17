@@ -86,6 +86,44 @@ let orderSchema = new mongoose.Schema({
     totalPrice: {
         required: true,
         type: Number
+    },
+    customerAddress: {
+        state: {
+            type: String,
+            required: true
+        },
+        city: {
+            type: String,
+            required: true
+        },
+        pincode: {
+            type: String,
+            required: true
+        },
+        address: {
+            type: String,
+            required: true
+        },
+        streetOrBuildingName: {
+            type: String,
+            required: true
+        },
+        landmark: {
+            type: String,
+            required: true
+        },
+        latitude: {
+            type: String,
+            required: true
+        },
+        longitude: {
+            type: String,
+            required: true
+        },
+        mapsAddress: {
+            type: String,
+            required: true
+        },
     }
 }); 
 

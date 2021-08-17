@@ -87,7 +87,6 @@ app.use('/meal', mealRoute);
 app.use('/user', userRoute);
 app.use('/address', addressRoute);
 
-
 // start sever
 app.listen(port, function() {
     logger.info(`App running on port ${port}`)
