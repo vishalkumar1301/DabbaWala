@@ -333,7 +333,7 @@ function RefactorOrderList(result) {
     return result.map(i => {
         let index = 0;
         return {
-            order: i.order.map(j => {
+            mealDetails: i.order.map(j => {
                 return {
                     dishes: j.dishes,
                     images: j.images,
