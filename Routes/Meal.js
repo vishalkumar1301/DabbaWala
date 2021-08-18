@@ -343,7 +343,7 @@ function RefactorOrderList(result) {
                 }
             }),
             cookId: i.cookId,
-            foodPrice: i.foodPrice,
+            totalFoodPrice: i.foodPrice,
             deliveryPrice: i.deliveryPrice,
             taxPrice: i.taxPrice,
             totalPrice: i.totalPrice,
