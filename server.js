@@ -89,7 +89,9 @@ app.use('/image', function (req, res) {
 }); 
 
 app.use(verifyLocalToken);
-
+app.get('/home', function (req, res) {
+  res.status(200).send();
+})
 app.use('/meal', mealRoute);
 app.use('/user', userRoute);
 app.use('/address', addressRoute);
