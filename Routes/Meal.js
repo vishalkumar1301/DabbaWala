@@ -13,6 +13,7 @@ const {logger} = require('../Config/winston');
 
 var upload = multer({ storage: storage })
 
+// cook adds a meal
 mealRoute.post('/', upload.array('photos', 4), function (req, res) {
     // validation check
     var error = mealValidation(req, res)
@@ -44,6 +45,7 @@ mealRoute.post('/', upload.array('photos', 4), function (req, res) {
     });
 });
 
+// get all the meals for customer
 mealRoute.get('/', function (req, res) {
     let search = req.query.search;
     let take = parseInt(req.query.take);
@@ -100,6 +102,7 @@ mealRoute.get('/', function (req, res) {
     })
 })
 
+// customer places an order
 mealRoute.post('/order', function (req, res) {
     let userId = req.user._id;
 
@@ -136,7 +139,7 @@ mealRoute.post('/order', function (req, res) {
     });
 });
 
-// all the orders
+// get all the orders - not used any where right now
 mealRoute.get('/order', function (req, res) {
     Order.aggregate([
         {
@@ -262,28 +265,48 @@ mealRoute.get('/order/cook/pending', function(req, res) {
     });
 });
 
-mealRoute.get('/:id', function (req, res) {
-    Meal.aggregate([
-        {
-            $match: {
-                "_id": mongoose.Types.ObjectId(req.params.id)
-            }
-        },
-        {
-            $lookup: {
-                from: 'users',
-                foreignField: '_id',
-                localField: 'cookId',
-                as: 'cook'
-            }
-        }
-    ]).exec(function (err, result) {
+// cook approves an order based on availability
+mealRoute.post('/order/cook/approve', function (req, res) {
+    Order.findOneAndUpdate({ _id: req.body.orderId }, { isOrderConfirmedByCook: true, orderConfirmedByCookTime: Date.now() }, function (err, order) {
         if(err) {
-            logger.error(err);
-        }
-        res.send(result);
-    });
+            return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
+        };
+        return res.json(new JSONResponse(null, Constants.SuccessMessages.AddressAddedSuccessfully).getJson());
+    })
 });
+
+// cook rejects an order based on availability
+mealRoute.post('/order/cook/reject', function (req, res) {
+    Order.findOneAndUpdate({ _id: req.body.orderId }, { isOrderRejectedByCook: true, orderRejectedByCookTime: Date.now() }, function (err, order) {
+        if(err) {
+            return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
+        };
+        return res.json(new JSONResponse(null, Constants.SuccessMessages.AddressAddedSuccessfully).getJson());
+    })
+});
+
+// mealRoute.get('/:id', function (req, res) {
+//     Meal.aggregate([
+//         {
+//             $match: {
+//                 "_id": mongoose.Types.ObjectId(req.params.id)
+//             }
+//         },
+//         {
+//             $lookup: {
+//                 from: 'users',
+//                 foreignField: '_id',
+//                 localField: 'cookId',
+//                 as: 'cook'
+//             }
+//         }
+//     ]).exec(function (err, result) {
+//         if(err) {
+//             logger.error(err);
+//         }
+//         res.send(result);
+//     });
+// });
 
 // mealRoute.get('/order/:id', function (req, res) {
 //     Order.aggregate([

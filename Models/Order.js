@@ -35,6 +35,15 @@ let orderSchema = new mongoose.Schema({
         required: false,
         type: Date
     },
+    isOrderRejectedByCook: {
+        required: true,
+        default: false,
+        type: Boolean
+    },
+    orderRejectedByCookTime: {
+        required: false,
+        type: Date
+    },
     isDelivered: {
         required: true,
         type: mongoose.Schema.Types.Boolean,

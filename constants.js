@@ -53,7 +53,8 @@ class Constants {
         AddressAlreadyExists: 'Address already exists',
         ChangedDefaultAddress: 'Changed default address',
         BreakfastAdded: 'Breakfast Added',
-        OrderPlacedSuccessfully: 'Order Placed Successfully'
+        OrderPlacedSuccessfully: 'Order Placed Successfully',
+        OrderAcceptedByCook: 'Order accepted by cook',
     };
     static AddressType = {
         Work: 'Work',
