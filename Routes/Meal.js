@@ -218,7 +218,8 @@ mealRoute.get('/order/cook/pending', function(req, res) {
         {
             $match: {
                 cookId: mongoose.Types.ObjectId(req.user._id),
-                isOrderConfirmedByCook: false
+                isOrderConfirmedByCook: false,
+                isOrderRejectedByCook: false
             }
         },
         {
@@ -267,11 +268,12 @@ mealRoute.get('/order/cook/pending', function(req, res) {
 
 // cook approves an order based on availability
 mealRoute.post('/order/cook/approve', function (req, res) {
+    console.log('here')
     Order.findOneAndUpdate({ _id: req.body.orderId }, { isOrderConfirmedByCook: true, orderConfirmedByCookTime: Date.now() }, function (err, order) {
         if(err) {
             return res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
         };
-        return res.json(new JSONResponse(null, Constants.SuccessMessages.AddressAddedSuccessfully).getJson());
+        return res.json(new JSONResponse(null, Constants.SuccessMessages.OrderAcceptedByCook).getJson());
     })
 });
 
