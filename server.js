@@ -14,6 +14,8 @@ const addressRoute = require('./Routes/Address');
 const mealRoute = require('./Routes/Meal');
 const userRoute = require('./Routes/User');
 require('./database');
+var admin = require("firebase-admin");
+
 
 dotenv.config();
 
@@ -29,6 +31,51 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
+
+
+
+
+
+////////////////////// notifications //////////////////
+
+
+
+var serviceAccount = require('./dabbawala-307114-firebase-adminsdk-1t0n7-228fd4f0df.json');
+
+admin.initializeApp({
+  	credential: admin.credential.cert(serviceAccount),
+	databaseURL: "https://prismappfcm.firebaseio.com"
+});
+var topic = 'general';
+
+var message = {
+  notification: {
+    title: 'Message from node',
+    body: 'hey there'
+  },
+  topic: topic
+};
+
+// Send a message to devices subscribed to the provided topic.
+admin.messaging().send(message)
+  .then((response) => {
+    // Response is a message ID string.
+    console.log('Successfully sent message:', response);
+  })
+  .catch((error) => {
+    console.log('Error sending message:', error);
+});
+
+
+////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
 
 
 app.use('/auth', authenticationRoutes);
