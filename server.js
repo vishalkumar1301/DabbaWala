@@ -92,7 +92,7 @@ app.use('/image', function (req, res) {
 app.use(verifyLocalToken);
 
 app.get('/home', function (req, res) {
-  res.status(200).send();
+  res.status(200).send(req.headers);
 })
 
 app.use('/meal', mealRoute);
