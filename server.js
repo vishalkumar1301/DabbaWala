@@ -40,27 +40,32 @@ app.use(passport.initialize());
 
 
 
-var serviceAccount = require('./dabbawala-307114-firebase-adminsdk-1t0n7-228fd4f0df.json');
-
+var serviceAccount = require('./dabbawala-307114-firebase-adminsdk-1t0n7-8710d78c88.json');
 admin.initializeApp({
-  	credential: admin.credential.cert(serviceAccount),
-	databaseURL: "https://prismappfcm.firebaseio.com"
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://dabbawala-307114-default-rtdb.firebaseio.com"
 });
+
 var topic = 'general';
 
 var message = {
-  notification: {
-    title: 'Message from node',
-    body: 'hey there'
+  "notification":{
+    "title":"Portugal vs. Denmark",
+    "body":"great match!"
+  },
+  "data":{
+    "Nick" : "Mario",
+    "body" : "great match!",
+    "Room" : "PortugalVSDenmark"
   },
   topic: topic
 };
 
 // Send a message to devices subscribed to the provided topic.
-admin.messaging().send(message)
+admin.messaging().send(message, true)
   .then((response) => {
     // Response is a message ID string.
-    console.log('Successfully sent message:', response);
+    console.log('Successfully sent message:', response, message);
   })
   .catch((error) => {
     console.log('Error sending message:', error);
