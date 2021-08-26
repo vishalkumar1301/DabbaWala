@@ -55,6 +55,7 @@ class Constants {
         BreakfastAdded: 'Breakfast Added',
         OrderPlacedSuccessfully: 'Order Placed Successfully',
         OrderAcceptedByCook: 'Order accepted by cook',
+        OrderRejectedByCook: 'Order rejected by cook',
     };
     static AddressType = {
         Work: 'Work',

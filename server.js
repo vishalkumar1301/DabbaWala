@@ -9,7 +9,7 @@ const cors = require('cors');
 const configuration = require('./config');
 const {logger} = require('./Config/winston');
 const { verifyLocalToken } = require('./Authentication/verifyLocalToken');
-const authenticationRoutes = require('./Routes/Routes');
+const AuthenticationRoute = require('./Routes/AuthenticationRoute');
 const addressRoute = require('./Routes/Address');
 const mealRoute = require('./Routes/Meal');
 const userRoute = require('./Routes/User');
@@ -32,59 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
-
-
-
-
-////////////////////// notifications //////////////////
-
-
-
-var serviceAccount = require('./dabbawala-307114-firebase-adminsdk-1t0n7-8710d78c88.json');
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://dabbawala-307114-default-rtdb.firebaseio.com"
-});
-
-var topic = 'general';
-
-var message = {
-  "notification":{
-    "title":"Portugal vs. Denmark",
-    "body":"great match!"
-  },
-  "data":{
-    "Nick" : "Mario",
-    "body" : "great match!",
-    "Room" : "PortugalVSDenmark"
-  },
-  topic: topic
-};
-
-// Send a message to devices subscribed to the provided topic.
-admin.messaging().send(message, true)
-  .then((response) => {
-    // Response is a message ID string.
-    console.log('Successfully sent message:', response, message);
-  })
-  .catch((error) => {
-    console.log('Error sending message:', error);
-});
-
-
-////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-app.use('/auth', authenticationRoutes);
-
+app.use('/auth', AuthenticationRoute);
 app.use('/image', function (req, res) {
   const db = mongoose.connection;
   
