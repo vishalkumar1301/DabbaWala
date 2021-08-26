@@ -20,7 +20,6 @@ userRoute.post('/fcmToken', function(req, res) {
         if(error) {
             res.status(statusCode).json(new JSONResponse(error).getJson());
         }
-        console.log(new JSONResponse(null, success).getJson());
         res.status(statusCode).json(new JSONResponse(null, success).getJson());
     })
 })

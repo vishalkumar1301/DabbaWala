@@ -74,7 +74,7 @@ class UserService {
             if(err) {
                 callback(Constants.ErrorMessages.InternalServerError, null, 500);
             }
-            callback(null, Constants.SuccessMessages.FcmTokenUpdated, 204);
+            callback(null, Constants.SuccessMessages.FcmTokenUpdated, 200);
         })
     }
 }
