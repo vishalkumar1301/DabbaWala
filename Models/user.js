@@ -33,6 +33,10 @@ let userSchema = new mongoose.Schema({
     token: {
         type: String
     },
+    fcmToken: {
+        type: String,
+        required: false
+    },
     addresses: [
         {
             state: {

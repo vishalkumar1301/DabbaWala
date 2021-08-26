@@ -68,6 +68,15 @@ class UserService {
             }
         });
     }
+
+    updateFCMToken(token, fcmToken, callback) {
+        User.findOneAndUpdate({token: token}, {fcmToken: fcmToken}, function (err, user) {
+            if(err) {
+                callback(Constants.ErrorMessages.InternalServerError, null, 500);
+            }
+            callback(null, Constants.SuccessMessages.FcmTokenUpdated, 204);
+        })
+    }
 }
 
 module.exports = new UserService();

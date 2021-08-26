@@ -56,6 +56,7 @@ class Constants {
         OrderPlacedSuccessfully: 'Order Placed Successfully',
         OrderAcceptedByCook: 'Order accepted by cook',
         OrderRejectedByCook: 'Order rejected by cook',
+        FcmTokenUpdated: 'Fcm Token Updated',
     };
     static AddressType = {
         Work: 'Work',
