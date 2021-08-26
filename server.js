@@ -14,8 +14,7 @@ const addressRoute = require('./Routes/Address');
 const mealRoute = require('./Routes/Meal');
 const userRoute = require('./Routes/User');
 require('./database');
-var admin = require("firebase-admin");
-
+require('./Service/notification')
 
 dotenv.config();
 

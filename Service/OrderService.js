@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var admin = require("firebase-admin");
 
 const { Constants } = require('../constants');
 const {logger} = require('../Config/winston');
@@ -35,6 +36,28 @@ class OrderService {
                 logger.error(err);
                 callback(Constants.ErrorMessages.InternalServerError, null, 500);
             }
+
+            const topic = 'general';
+
+            const message = {
+                notification: {
+                    title: 'New Order coming',
+                    body: 'Approve/Reject'
+                  },
+              topic: topic
+            };
+            
+            // Send a message to devices subscribed to the provided topic.
+            admin.messaging().send(message)
+              .then((response) => {
+                // Response is a message ID string.
+                console.log('Successfully sent message:', response);
+              })
+              .catch((error) => {
+                console.log('Error sending message:', error);
+              });
+
+
             callback(null, Constants.SuccessMessages.OrderPlacedSuccessfully, 200);
         });
     }
