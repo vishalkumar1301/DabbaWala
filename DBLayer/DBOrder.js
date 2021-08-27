@@ -1,19 +1,34 @@
-class Order {
-    getFCMTokenIdsForCookAndCustomerByOrderId(orderId) {
-        Order.aggregate([
+const mongoose = require('mongoose');
+
+const Order = require('../Models/Order');
+
+class DBOrder {
+    async getFCMTokenIdOfCustomerByOrderId(orderId) {
+        let result = await Order.aggregate([
             {
                 $match: {
-                    _id: orderId,
+                    _id: mongoose.Types.ObjectId(orderId),
                 }
-            }, 
+            },
             {
                 $lookup: {
                     from: "users",
-                    localField: "mealDetails.mealId",
+                    localField: "customerId",
                     foreignField: "_id",
-                    as: "order"
+                    as: "customer"
+                }
+            },
+            {
+                $unwind: '$customer'
+            },
+            {
+                $project: {
+                    fcmToken: '$customer.fcmToken'
                 }
             }
-        ])
+        ]).exec();
+        return result[0].fcmToken;
     }
 }
+
+module.exports = new DBOrder();

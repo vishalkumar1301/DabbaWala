@@ -1,5 +1,6 @@
 const admin = require("firebase-admin");
 const DBUser = require('../DBLayer/DBUser');
+const DBOrder = require('../DBLayer/DBOrder');
 
 class NotificationService {
     constructor() {
@@ -27,19 +28,38 @@ class NotificationService {
         });
     }
 
-    async OrderApproved(fcmTokenIds, userIds) {
+    async OrderApproved(orderId) {
         
-        let userFCMTokens = fcmTokenIds == null ? await DBUser.GetFcmTokenArrayForUsers(userIds) : fcmTOkenIds;
+        let customerFCMToken = await DBOrder.getFCMTokenIdOfCustomerByOrderId(orderId);
 
         const message = {
             notification: {
                 title: 'Order Approved by cook',
                 body: 'Order is being prepared'
             },
-            tokens: userFCMTokens
+            token: customerFCMToken
         };
         
-        admin.messaging().sendMulticast(message)
+        admin.messaging().send(message)
+            .then((response) => {
+            })
+            .catch((error) => {
+        });
+    }
+
+    async OrderRejected(orderId) {
+
+        let customerFCMToken = await DBOrder.getFCMTokenIdOfCustomerByOrderId(orderId);
+
+        const message = {
+            notification: {
+                title: 'Order rejected by cook',
+                body: 'get lost'
+            },
+            token: customerFCMToken
+        };
+        
+        admin.messaging().send(message)
             .then((response) => {
             })
             .catch((error) => {
