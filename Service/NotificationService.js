@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const DBUser = require('../DBLayer/DBuser');
+const DBUser = require('../DBLayer/DBUser');
 
 class NotificationService {
     constructor() {
