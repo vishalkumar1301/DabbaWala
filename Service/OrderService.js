@@ -156,7 +156,7 @@ class OrderService {
                 callback(Constants.ErrorMessages.InternalServerError, null, 500);
             };
 
-            NotificationService.OrderApproved(orderId);
+            OrderNotifications.OrderApproved(orderId);
 
             callback(null, Constants.SuccessMessages.OrderAcceptedByCook, 200);
         })
@@ -169,7 +169,7 @@ class OrderService {
                 callback(Constants.ErrorMessages.InternalServerError, null, 500);
             };
 
-            NotificationService.OrderRejected(orderId)
+            OrderNotifications.OrderRejected(orderId)
 
             callback(null, Constants.SuccessMessages.OrderRejectedByCook, 200);
         })

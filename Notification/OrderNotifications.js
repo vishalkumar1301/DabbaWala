@@ -14,39 +14,13 @@ class OrderNotifications{
     async OrderApproved(orderId) {
         
         let customerFCMToken = await DBOrder.getFCMTokenIdOfCustomerByOrderId(orderId);
-
-        const message = {
-            notification: {
-                title: 'Order Approved by cook',
-                body: 'Order is being prepared'
-            },
-            token: customerFCMToken
-        };
-        
-        admin.messaging().send(message)
-            .then((response) => {
-            })
-            .catch((error) => {
-        });
+        NotificationService.NotifyToADevice(customerFCMToken, "Your order has been approved", "Order is being prepared");
     }
 
     async OrderRejected(orderId) {
 
         let customerFCMToken = await DBOrder.getFCMTokenIdOfCustomerByOrderId(orderId);
-
-        const message = {
-            notification: {
-                title: 'Order rejected by cook',
-                body: 'get lost'
-            },
-            token: customerFCMToken
-        };
-        
-        admin.messaging().send(message)
-            .then((response) => {
-            })
-            .catch((error) => {
-        });
+        NotificationService.NotifyToADevice(customerFCMToken, "Your order has been rejected by cook", "Sorry for the inconvenience");
     }
 }
 

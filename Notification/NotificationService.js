@@ -36,8 +36,9 @@ class NotificationService {
         };
 
         await admin.messaging().sendMulticast(message).then(function(response) {
-            console.log(response);
+            // console.log(response);
         }).catch(function(error) {
+            logger.error(error);
             console.log(error);
         });
     }
