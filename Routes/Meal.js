@@ -2,11 +2,13 @@ const express = require('express');
 const multer = require('multer');
 
 const mealRoute = express.Router();
-const { JSONResponse } = require('../Constants/Response');
-const { storage } = require('../database');
-const { mealValidation } = require('../Validations/CustomValidation/meal');
 const MealService = require('../Service/MealService');
 const OrderService = require('../Service/OrderService');
+const { storage } = require('../database');
+const { JSONResponse } = require('../Constants/Response');
+const { Constants } = require('../constants');
+const {logger} = require('../Config/winston');
+const { mealValidation } = require('../Validations/CustomValidation/meal');
 
 var upload = multer({ storage: storage })
 
@@ -86,5 +88,18 @@ mealRoute.post('/order/cook/reject', function (req, res) {
         res.status(statusCode).send(new JSONResponse(null, success).getJson());
     });
 });
+
+mealRoute.get('/order/customer', async function (req, res) {
+    
+    try {
+        let orders = await OrderService.GetCustomerBookedOrders(req.user._id);
+        res.status(200).send(orders);
+    }
+    catch (err) {
+        logger.error('\nError in route /order/customer', err);
+        res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
+    }
+
+})
 
 module.exports = mealRoute;

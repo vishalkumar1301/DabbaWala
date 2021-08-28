@@ -5,6 +5,7 @@ const { Constants } = require('../constants');
 const {logger} = require('../Config/winston');
 const Order = require('../Models/Order');
 const OrderNotifications = require('../Notification/OrderNotifications');
+const DBOrder = require('../DBLayer/DBOrder');
 
 class OrderService {
 
@@ -175,19 +176,21 @@ class OrderService {
         })
     }
 
+    async GetCustomerBookedOrders(customerId) {
+        try {
+            let orders = await DBOrder.GetOrdersByCustomerId(customerId);
+            return this.refactorOrderListForCustomer(orders);
+        }
+        catch (err) {
+            logger.error(err);
+            throw err;
+        }
+    }
+
     refactorOrderList(result) {
         return result.map(i => {
-            let index = 0;
             return {
-                mealDetails: i.order.map(j => {
-                    return {
-                        dishes: j.dishes,
-                        images: j.images,
-                        mealType: j.mealType,
-                        price: j.price,
-                        quantity: i.mealDetails[index++].quantity
-                    }
-                }),
+                mealDetails: this.combineQuantityAndMealDetails(i),
                 cookId: i.cookId,
                 totalFoodPrice: i.foodPrice,
                 deliveryPrice: i.deliveryPrice,
@@ -198,6 +201,39 @@ class OrderService {
                 customerLastName: i.customerLastName,   
                 customerId: i.customerId,
                 orderId: i.orderId,
+            }
+        });
+    }
+
+    refactorOrderListForCustomer(result) {
+        return result.map(i => {
+            return {
+                mealDetails: this.combineQuantityAndMealDetails(i),
+                cookId: i.cookId,
+                totalFoodPrice: i.foodPrice,
+                deliveryPrice: i.deliveryPrice,
+                taxPrice: i.taxPrice,
+                totalPrice: i.totalPrice,
+                orderTime: i.orderTime,
+                cookFirstName: i.cook.firstName,
+                cookLastName: i.cook.lastName,   
+                customerId: i.customerId,
+                orderId: i.orderId,
+                isOrderConfirmedByCook: i.isOrderConfirmedByCook,
+                isOrderRejectedByCook: i.isOrderRejectedByCook,
+            }
+        });
+    }
+
+    combineQuantityAndMealDetails (element) {
+        let index = 0;
+        return element.order.map(j => {
+            return {
+                dishes: j.dishes,
+                images: j.images,
+                mealType: j.mealType,
+                price: j.price,
+                quantity: element.mealDetails[index++].quantity
             }
         });
     }

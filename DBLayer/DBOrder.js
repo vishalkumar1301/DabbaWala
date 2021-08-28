@@ -80,6 +80,43 @@ class DBOrder {
             logger.error(err);
         }
     }
+
+    async GetOrdersByCustomerId(customerId) {
+        let orders = await Order.aggregate([
+            {
+                $match: {
+                    customerId: mongoose.Types.ObjectId(customerId),
+                }
+            },
+            {
+                $lookup: {
+                    from: "meals",
+                    localField: "mealDetails.mealId",
+                    foreignField: "_id",
+                    as: "order"
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "cookId",
+                    foreignField: "_id",
+                    as: "cook"
+                }
+            },
+            {
+                $unwind: '$cook'
+            }
+        ]).exec();
+
+        try {
+            return orders;
+        }
+        catch (err) {
+            logger.error('\nError in GetOrdersByCustomerId in DBOrder.js');
+            throw err;
+        }
+    }
 }
 
 module.exports = new DBOrder();
