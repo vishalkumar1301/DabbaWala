@@ -1,31 +1,14 @@
-const admin = require("firebase-admin");
+const NotificationService = require('./NotificationService');
 const DBUser = require('../DBLayer/DBUser');
 const DBOrder = require('../DBLayer/DBOrder');
 
-class NotificationService {
-    constructor() {
-        var serviceAccount = require('../dabbawala-307114-firebase-adminsdk-1t0n7-8710d78c88.json');
-        admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount),
-        });
-    }
-
-    async OrderPlaced (fcmTokenIds, userIds) {
-
-        let userFCMTokens = await DBUser.GetFcmTokenArrayForUsers(userIds);
-        const message = {
-            notification: {
-                title: 'New Order coming',
-                body: 'Approve/Reject'
-            },
-          tokens: userFCMTokens
-        };
-
-        admin.messaging().sendMulticast(message)
-            .then((response) => {
-            })
-            .catch((error) => {
-        });
+class OrderNotifications{
+    async OrderPlaced (orderId) {
+        let order = await DBOrder.GetOrderCustomerAndCookByOrderId(orderId);
+        console.log(order.customer.fcmToken)
+        console.log(order.cook.fcmToken)
+        NotificationService.NotifyToADevice(order.customer.fcmToken, "Your Order has been Placed", "Waiting for confimation from cook");
+        NotificationService.NotifyToADevice(order.cook.fcmToken, "New Order", `${order.customer.firstName} ${order.customer.lastName} ordered ${order.order.dishes.length} ${order.order.mealType}`);
     }
 
     async OrderApproved(orderId) {
@@ -65,7 +48,6 @@ class NotificationService {
             .catch((error) => {
         });
     }
-
 }
 
-module.exports = new NotificationService();
+module.exports = new OrderNotifications();

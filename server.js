@@ -14,7 +14,7 @@ const addressRoute = require('./Routes/Address');
 const mealRoute = require('./Routes/Meal');
 const userRoute = require('./Routes/User');
 require('./database');
-require('./Service/NotificationService')
+require('./Notification/NotificationService')
 
 dotenv.config();
 

@@ -4,7 +4,7 @@ var admin = require("firebase-admin");
 const { Constants } = require('../constants');
 const {logger} = require('../Config/winston');
 const Order = require('../Models/Order');
-const NotificationService = require('../Service/NotificationService');
+const OrderNotifications = require('../Notification/OrderNotifications');
 
 class OrderService {
 
@@ -38,7 +38,7 @@ class OrderService {
                 callback(Constants.ErrorMessages.InternalServerError, null, 500);
             }
 
-            NotificationService.OrderPlaced(null, [cookId, customerId]);
+            OrderNotifications.OrderPlaced(result._id);
 
             callback(null, Constants.SuccessMessages.OrderPlacedSuccessfully, 200);
         });
