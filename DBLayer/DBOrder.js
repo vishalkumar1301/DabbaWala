@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const Order = require('../Models/Order');
 const {logger} = require('../Config/winston');
+const { Constants } = require('../constants');
 
 class DBOrder {
     async getFCMTokenIdOfCustomerByOrderId(orderId) {
@@ -113,7 +114,22 @@ class DBOrder {
             return orders;
         }
         catch (err) {
-            logger.error('\nError in GetOrdersByCustomerId in DBOrder.js');
+            throw err;
+        }
+    }
+
+    async UpdateOrderPreparedByOrderId(orderId) {
+        try {
+            await Order.findOneAndUpdate({ 
+                _id: mongoose.Types.ObjectId(orderId) 
+            },
+            { 
+                isOrderPrepared: true, 
+                orderPreparedTime: Date.now()
+            }).exec();
+            return Constants.SuccessMessages.OrderIsPrepared;
+        }
+        catch (err) {
             throw err;
         }
     }

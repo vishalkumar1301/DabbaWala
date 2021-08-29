@@ -3,11 +3,8 @@ const multer = require('multer');
 
 const mealRoute = express.Router();
 const MealService = require('../Service/MealService');
-const OrderService = require('../Service/OrderService');
 const { storage } = require('../database');
 const { JSONResponse } = require('../Constants/Response');
-const { Constants } = require('../constants');
-const {logger} = require('../Config/winston');
 const { mealValidation } = require('../Validations/CustomValidation/meal');
 
 var upload = multer({ storage: storage })
@@ -37,69 +34,6 @@ mealRoute.get('/', function (req, res) {
         }
         res.status(statusCode).send(success);
     });
-})
-
-// customer places an order
-mealRoute.post('/order', function (req, res) {
-    OrderService.placeOrder(req.user._id , req.body.mealDetails, req.body.cookId, req.body.foodPrice, req.body.deliveryPrice, req.body.taxPrice, req.body.customerAddress, function (error, success, statusCode) {
-        if(error) {
-            res.status(statusCode).json(new JSONResponse(error).getJson());
-        }
-        res.status(statusCode).send(new JSONResponse(null, success).getJson());
-    });
-});
-
-// fetch the orders approved by cook
-mealRoute.get('/order/cook/booked', function (req, res) {
-    OrderService.fetchOrdersApprovedByCook (req.user._id, function (error, success, statusCode) {
-        if(error) {
-            res.status(statusCode).json(new JSONResponse(error).getJson());
-        }
-        res.status(statusCode).send(success);
-    });
-})
-
-// gets the orders, pending for approval by cook.
-mealRoute.get('/order/cook/pending', function(req, res) {
-    OrderService.fetchOrderPendingForApproval(req.user._id, function(error, success, statusCode) {
-        if(error) {
-            res.status(statusCode).json(new JSONResponse(error).getJson());
-        }
-        res.status(statusCode).send(success);
-    });
-});
-
-// cook approves an order based on availability
-mealRoute.post('/order/cook/approve', function (req, res) {
-    OrderService.cookApprovesOrder(req.body.orderId, function(error, success, statusCode) {
-        if(error) {
-            res.status(statusCode).json(new JSONResponse(error).getJson());
-        }
-        res.status(statusCode).send(new JSONResponse(null, success).getJson());
-    });
-});
-
-// cook rejects an order based on availability
-mealRoute.post('/order/cook/reject', function (req, res) {
-    OrderService.cookRejectsOrder(req.body.orderId, function(error, success, statusCode) {
-        if(error) {
-            res.status(statusCode).json(new JSONResponse(error).getJson());
-        }
-        res.status(statusCode).send(new JSONResponse(null, success).getJson());
-    });
-});
-
-mealRoute.get('/order/customer', async function (req, res) {
-    
-    try {
-        let orders = await OrderService.GetCustomerBookedOrders(req.user._id);
-        res.status(200).send(orders);
-    }
-    catch (err) {
-        logger.error('\nError in route /order/customer', err);
-        res.status(500).json(new JSONResponse(Constants.ErrorMessages.InternalServerError).getJson());
-    }
-
 })
 
 module.exports = mealRoute;

@@ -13,6 +13,7 @@ const AuthenticationRoute = require('./Routes/AuthenticationRoute');
 const addressRoute = require('./Routes/Address');
 const mealRoute = require('./Routes/Meal');
 const userRoute = require('./Routes/User');
+const orderRoute = require('./Routes/Order');
 require('./database');
 require('./Notification/NotificationService')
 
@@ -95,6 +96,7 @@ app.get('/home', function (req, res) {
 })
 
 app.use('/meal', mealRoute);
+app.use('/order', orderRoute);
 app.use('/user', userRoute);
 app.use('/address', addressRoute);
 

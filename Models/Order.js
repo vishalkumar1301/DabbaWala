@@ -44,6 +44,15 @@ let orderSchema = new mongoose.Schema({
         required: false,
         type: Date
     },
+    isOrderPrepared: {
+        required: true,
+        default: false,
+        type: Boolean
+    },
+    orderPreparedTime: {
+        required: false,
+        type: Date
+    },
     isDelivered: {
         required: true,
         type: mongoose.Schema.Types.Boolean,

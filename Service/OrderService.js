@@ -187,6 +187,15 @@ class OrderService {
         }
     }
 
+    async OrderPrepared(orderId) {
+        try {
+            return await DBOrder.UpdateOrderPreparedByOrderId(orderId);
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+
     refactorOrderList(result) {
         return result.map(i => {
             return {
