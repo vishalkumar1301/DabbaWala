@@ -217,6 +217,7 @@ class OrderService {
     refactorOrderListForCustomer(result) {
         return result.map(i => {
             return {
+                _id: i._id,
                 mealDetails: this.combineQuantityAndMealDetails(i),
                 cookId: i.cookId,
                 totalFoodPrice: i.foodPrice,
