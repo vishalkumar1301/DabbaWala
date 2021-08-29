@@ -56,7 +56,7 @@ orderRoute.post('/cook/reject', function (req, res) {
     });
 });
 
-orderRoute.get('/customer', async function (req, res) {
+orderRoute.get('/customer/booked', async function (req, res) {
     try {
         let orders = await OrderService.GetCustomerBookedOrders(req.user._id);
         res.status(200).send(orders);
